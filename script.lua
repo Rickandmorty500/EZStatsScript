@@ -138,53 +138,6 @@ getgenv().ezstats = {
 	autoJumpEnabled = false
 }
 
-
-
-
-
--- ANTI ADMIN ---------------------------------------------------------------
-coroutine.resume(coroutine.create(function()
-	repeat wait(.25) until EZSTATS_READY and ezstats and ezstats.antiAdminEnabled
-	local admins = JSON.parse(game:HttpGet('http://ezstats.xyz/ff-admins',true))
-	local function onAdminFound(admin)
-		if ezstats.antiAdminEnabled then
-			if ezstats.antiAdminMode == 'serverhop' then
-				local f = ((syn and syn.queue_on_teleport) or queue_on_teleport or function()ts:Teleport(game.PlaceId)end)
-				f("game.Loaded:wait()getgenv().adminName='" .. admin.Name .. "'loadstring(game:HttpGet('https://pastebin.com/raw/VLLCkQHt',true))()wait(15)game:GetService'TeleportService':Teleport(3694166020)")
-				ts:Teleport(4996024512)
-			elseif ezstats.antiAdminMode == 'rejoin' then
-				ts:TeleportToPlaceInstance(game.PlaceId,game.JobId)
-			end
-		end
-	end
-	local function isAdmin(player)
-		for _,v in pairs(admins) do
-			if v.UserId == player.UserId and not ezstats.antiAdminIgnoreList[v.UserId] and not ezstats.antiAdminIgnoreList[v.Username] then
-				return true
-			end
-		end
-		return false
-	end
-	for _,v in pairs(players:GetPlayers()) do
-		if isAdmin(v) then
-			onAdminFound(v)
-		end
-	end
-	players.PlayerAdded:Connect(function(player)
-		if isAdmin(player) then
-			onAdminFound(player)
-		end
-	end)
-end))
------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
 -- Functions
 local function create(class,parent,props,children)
 	props = props or {}
